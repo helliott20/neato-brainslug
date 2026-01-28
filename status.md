@@ -29,6 +29,9 @@
 - If possible: push notifications for non-ha install
 - Improve notifications
 
+#### Not sure if 1.3 or 1.4
+- Set schedule of gen1 and gen2 robots via esphome
+
 #### Version 1.4 - planned
 - Translations
 - Use esphome package stuff to fetch from github directly
