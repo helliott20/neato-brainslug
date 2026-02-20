@@ -1,13 +1,14 @@
 # Install ESPHome device
 
-Now its time to install the ESPHome device in a more permanent way, there is two ways 
+Now its time to install the ESPHome device in a more permanent way, there is two main ways to do this, and both of these methods use the following item:
+| |  | | |
+:-:|:-:|:-:|:-:
+**JST-XH to DuPont** | ![JST-XH to dupont](pics/installs/0_jst-xh.jpg) | Either buy or make this type of cable, it will be used to connect the ESP device to the debug port. You could also use dupont female-female connectors, but you will need the make the hole larger and add some protection for the cables because they would be too stiff and could break when the robot bumps into things. | https://www.aliexpress.com/item/1005006251847933.html
 
 
-And once you are ready for the permanent installation, you there is two ways to do it:
-
-[Externally; by drilling a hole in the bumper](./install-externally.md) | [Internally; by connecting to the debug port using an JST-XH connector (recommended)](./install-internally.md)
+[Externally; by drilling a hole in the bumper](#externally) | [Internally; by connecting to the debug port using an JST-XH connector (recommended)](#internally)
 :-------------------------:|:-------------------------:
-![cables-via-bumper](./pics/d3/cables-via-bumper.jpg) ![d3-install-outside](./pics/installs/d3-install-outside.png) | ![jay-jst-xh](./pics/installs/jay/2-install-JST-XH.jpg) ![jay-installed](./pics/installs/jay/4-installed-and-taped.jpg)
+![cables-via-bumper](./pics/installs/8_cables-via-bumper.jpg) ![d3-install-outside](./pics/installs/external.jpg) | ![jay-jst-xh](./pics/installs/jay/2-install-JST-XH.jpg) ![jay-installed](./pics/installs/jay/4-installed-and-taped.jpg)
 
 
 ## Internally
@@ -117,9 +118,7 @@ Bending the pins you risk breaking the board, so this method should be avoided.
 My initial external install was with the ESP on the back of robot, however after running a couple of cleanings, it became clear this was not a good way. I have since then found a new way that I will detail here; it works a lot better, however the first steps are the same.
 
 ### Prerequisites
-what | image | why
-:-------------------------:|:----:|:----:
-JST-XH to dupont | ![JST-XH to dupont](pics/installs/0_jst-xh.jpg) | Either buy or make this type of cable, it will be used to connect the ESP device to the debug port. You could also use dupont female-female connectors, but you will need the make the hole larger and add some protection for the cables because they would be too stiff and could break when the robot bumps into things.
+
 
 
 ### Step-by-step
