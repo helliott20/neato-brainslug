@@ -133,6 +133,8 @@ There is two ways of using this repair:
 ## Beta
 The `main` branch will have the code and guide for the latest release, but in case you want to try the latest beta this version with live on the `next` branch. In case certain features are on their way into the beta, but not in a beta yet, they will live on `next/<feature name>`. 
 
+The config files for the betas will live in the `config` folder instead of the releases tab, where the links in the different guides will point to!
+
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=philip2809/neato-connected&type=date&legend=top-left)](https://www.star-history.com/#philip2809/neato-connected&type=date&legend=top-left)

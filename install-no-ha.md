@@ -2,7 +2,7 @@
 
 You can also use this repair without Home Assistant, however future versions of neato-brainslug will require a docker conatiner that is running, easiest installation will be via home assistant.
 
-# TODO: add images
+![Webserver](pics/setup/step_4-webserver-connected.png)
 
 **Overview of steps**
 1. Flash ESP device with prebuilt images
@@ -79,13 +79,13 @@ Now you can enjoy your locally controllable neato vacuum cleaner!
 Eventually there will be updates, either as new features or stability fixes, however all of this connecting and flashing will no longer be required since ESPHome have support for OTA-updates. To update when a new version comes out you will need to:
 1. Download the OTA update file from (github releases)[add link]
     
-    Downloads for reccomended ESP32 devices is here:
+    Downloads for recommended ESP32 devices is here:
     # TODO: add links
     - ESP32
     - ESP32-S3
     - ESP32-C3
-2. Go to the webserver of the device and upload the file under the OTA section
-    # TODO: add image
+2. Go to the webserver of the device and upload the file under the OTA section, then press "UPDATE"
+    ![OTA update](pics/setup/step_6-webserver-ota.png)
 3. Wait for it to update and restart then refresh the page, you should now be on the latest version!
 
 
