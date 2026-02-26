@@ -83,10 +83,10 @@ Behind bumper:
 ![Neato robot on its back. Screws to remove are marked](pics/installs/jay/1-removing-screws.jpg "Remove these screws")
 
 How do you want to continue?
-- Internally
-- Behind bumper cutting
-- Behind bumper with small ESP (or custom pcba cable)
-- Externally
+- [Internally](#internally)
+- [Behind bumper cutting](#behind-bumper---cutting)
+- [Behind bumper with small ESP (or custom pcba cable)](#behind-bumper---small-esp-device)
+- [Externally](#externally)
 
 ### Internally
 
