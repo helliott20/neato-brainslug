@@ -38,9 +38,9 @@ _Control your Neato vacuum locally with an ESPHome brainslug_
 
 
 
-Repair your Neato Robot Vacuum to be controlled via locally after the shutdown of the Neato servers. The scope of this project is to give your robot at least the same functionallity as when you bought it, however as the project is in a development state. The `main` branch only gets updates on releases, check out the `next` branch for the latest updates!
+Repair your Neato Robot Vacuum to be controlled locally after the shutdown of the Neato servers. The scope of this project is to give your robot at least the same functionallity as when you bought it, however the project is in a development state. The `main` branch only gets updates on releases, check out the `next` branch for the latest updates!
 
-Since there is a couple of robots from neato and they have different firmware versions, they will need different configurations. I have decided they will be grouped based on their "generation".
+Since there is a couple of robots from Neato and they have different firmware versions, they will need different configurations. I have decided they will be grouped based on their "generation".
 
 - `gen1` - (Generation 1)
     - XV11
@@ -90,19 +90,19 @@ Since there is a couple of robots from neato and they have different firmware ve
 - ² - Support can be added by version 1
 - ³ - Support can be added by version 2
 
-The ability to create, view and edit floormaps so the robot can get the same functionallity with nogo-lines and zones is in the making.
+The ability to create, view and edit floormaps so the robot can get the same functionallity with no-go lines and zones is in the making.
 
-The reason this works on all neato robots is because they all have the command interface, even the robots that originally don't have any wifi will still work, since it is no longer wifi robot that is connecting to the wifi, it is the ESP device. This also removes any limitations the robots wifi may have had.
+The reason this works on all Neato robots is because they all have the command interface, even the robots that originally don't have any WiFi, will still work, since it is no longer WiFi robot that is connecting to the WiFi, it is the ESP device. This also removes any limitations the robots WiFi may have had.
 
 **`gen1` robots**
-- We are currently looking into the best way to connect to these, please join the discord where we are currently talking about the best way to do it and the experimentation going on!
+- We are currently looking into the best way to connect to these, please join the [Discord](https://discord.gg/PAgwhWvyD8) where we are currently talking about the best way to do it and the experimentation going on!
 
 **`gen4` robots**
-- These robots use a compleatly different board, chip and firmware, and we cannot interface with these directly. However one idea to get the start/stop feature back is to wire an esp32 to the button itself, join the discord or open an discussion here so we can discuss! 
+- These robots use a compleatly different board, chip and firmware, and we cannot interface with these directly. However one idea to get the start/stop feature back is to wire an esp32 to the button itself, join the [Discord](https://discord.gg/PAgwhWvyD8) or open an discussion here so we can discuss! 
 
 # Getting started!
 
-To get this up and running you will need to connect to the debug port or usb port on the robot. The XV-series robots have the usb port on the back, the rest has it in the dustbin area, making it inaccicible when using, for these robots we need to connect via the serial debug port, you would also need to do this if you are installing it internally inside the XV-series. So sadly for this repair you will need to get some extra hardware to get it up and running; however we are happy to help you out any step along the way!
+To get this up and running, you will need to connect to the debug port or USB port on the robot. The XV-series robots have the USB port on the back, the rest has it in the dustbin area, making it inaccessible when using, for these robots we need to connect via the serial debug port, you would also need to do this if you are installing it internally inside the XV-series. So, sadly for this repair you will need to get some extra hardware to get it up and running; however we are happy to help you out any step along the way!
 
 First of all we need to get the version of your robot; to do this do the following:
 
@@ -126,7 +126,7 @@ There is two ways of using this repair:
 - [**Without Home Assistant**](./install-no-ha.md) 
 - [**With Home Assistant**](./install-ha.md)
 
-**If you don't mind to tinker a little bit I really do recommend to check out Home Assistant and do that route.** It is an open source home automation tool that puts local control and privacy first. Read more about them on their [website](https://www.home-assistant.io/) and try their [live demo](https://demo.home-assistant.io) if you want! There is a lot of great guides and information about home hassistant on youtube and their forums! They also have some amazing guides on their [site](https://www.home-assistant.io/installation/) to get an home assistant installation going. If you have any questions or problems, don't hesitate to ask for help here in the [discusstions](https://github.com/Philip2809/neato-connected/discussions) section, on our [discord](https://discord.gg/PAgwhWvyD8) or the home assistant [help](https://www.home-assistant.io/help/) page. 
+**If you don't mind to tinker a little bit I really do recommend to check out Home Assistant and do that route.** It is an open source home automation tool that puts local control and privacy first. Read more about them on their [website](https://www.home-assistant.io/) and try their [live demo](https://demo.home-assistant.io) if you want! There is a lot of great guides and information about home hassistant on youtube and their forums! They also have some amazing guides on their [site](https://www.home-assistant.io/installation/) to get an home assistant installation going. If you have any questions or problems, don't hesitate to ask for help here in the [discusstions](https://github.com/Philip2809/neato-connected/discussions) section, on our [Discord](https://discord.gg/PAgwhWvyD8) or the home assistant [help](https://www.home-assistant.io/help/) page. 
 
 **From version 2 of this project, when ROS is used for getting a floormap, you will need a separate computer running ROS, and the easiest and prioritized way to set that up will be via Home Assistant.**
 
