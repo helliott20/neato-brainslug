@@ -4,7 +4,7 @@
 
 You will have to go a bit back and forth between this guide and where you came from!
 
-There is no full step by step guide for the gen2 robots, just general information. Info and pictures are taken from https://github.com/Philip2809/neato-connected/discussions/72
+There is no full step by step guide for the gen2 robots, just general information. Info and pictures are taken from https://github.com/Philip2809/neato-brainslug/discussions/72
 
 1. Turn the robot off, remove the battery
 

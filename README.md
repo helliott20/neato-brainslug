@@ -66,7 +66,7 @@ Since there is a couple of robots from neato and they have different firmware ve
     - Neato D800 (very very likely the same as the d8-d10, not confirmed tho)
     - Neato D8 Intelligent `905-09596`
     - Neato D9 Intelligent `905-0559`
-    - Neato D10 Intelligent `905-`
+    - Neato D10 Intelligent `905-0724`
 
 
 | Feature | `gen1` | `gen2` | `gen3` |
@@ -126,7 +126,7 @@ There is two ways of using this repair:
 - [**Without Home Assistant**](./install-no-ha.md) 
 - [**With Home Assistant**](./install-ha.md)
 
-**If you don't mind to tinker a little bit I really do recommend to check out Home Assistant and do that route.** It is an open source home automation tool that puts local control and privacy first. Read more about them on their [website](https://www.home-assistant.io/) and try their [live demo](https://demo.home-assistant.io) if you want! There is a lot of great guides and information about home hassistant on youtube and their forums! They also have some amazing guides on their [site](https://www.home-assistant.io/installation/) to get an home assistant installation going. If you have any questions or problems, don't hesitate to ask for help here in the [discusstions](https://github.com/Philip2809/neato-connected/discussions) section, on our [discord](https://discord.gg/PAgwhWvyD8) or the home assistant [help](https://www.home-assistant.io/help/) page. 
+**If you don't mind to tinker a little bit I really do recommend to check out Home Assistant and do that route.** It is an open source home automation tool that puts local control and privacy first. Read more about them on their [website](https://www.home-assistant.io/) and try their [live demo](https://demo.home-assistant.io) if you want! There is a lot of great guides and information about home hassistant on youtube and their forums! They also have some amazing guides on their [site](https://www.home-assistant.io/installation/) to get an home assistant installation going. If you have any questions or problems, don't hesitate to ask for help here in the [discusstions](https://github.com/Philip2809/neato-brainslug/discussions) section, on our [discord](https://discord.gg/PAgwhWvyD8) or the home assistant [help](https://www.home-assistant.io/help/) page. 
 
 **From version 2 of this project, when ROS is used for getting a floormap, you will need a separate computer running ROS, and the easiest and prioritized way to set that up will be via Home Assistant.**
 
@@ -137,7 +137,7 @@ The config files for the betas will live in the `config` folder instead of the r
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=philip2809/neato-connected&type=date&legend=top-left)](https://www.star-history.com/#philip2809/neato-connected&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=philip2809/neato-brainslug&type=date&legend=top-left)](https://www.star-history.com/#philip2809/neato-brainslug&type=date&legend=top-left)
 
 ## Acknowledgements
 

@@ -60,8 +60,8 @@ If you want to add more devices, best practice is to set the api key and ota pas
 
 ### Config file
 Download the ESPHome config based on the generation of your robot:
-- [`gen2`](https://github.com/philip2809/neato-connected/releases/latest/download/esphome_gen2.yaml)
-- [`gen3`](https://github.com/philip2809/neato-connected/releases/latest/download/esphome_gen3.yaml)
+- [`gen2`](https://github.com/philip2809/neato-brainslug/releases/latest/download/esphome_gen2.yaml)
+- [`gen3`](https://github.com/philip2809/neato-brainslug/releases/latest/download/esphome_gen3.yaml)
 
 Once back at the ESPHome main page, click the big green button in the bottom left to add a new device. Read the information, but for now, click "Continue" and either import the file you downloaded, or start with an empty configuration and paste the contents in. Open the file in edit mode in case it does not automatically open in edit mode.
 
@@ -120,8 +120,8 @@ After flashing and connecting the ESP device to the robot we need to add the ESP
 
 ## Step 6
 Copy the contents of the Home Assistant card for your vacuum generation
-- [`gen2`](https://github.com/philip2809/neato-connected/releases/latest/download/ha-card_gen2.yaml)
-- [`gen3`](https://github.com/philip2809/neato-connected/releases/latest/download/ha-card_gen3.yaml)
+- [`gen2`](https://github.com/philip2809/neato-brainslug/releases/latest/download/ha-card_gen2.yaml)
+- [`gen3`](https://github.com/philip2809/neato-brainslug/releases/latest/download/ha-card_gen3.yaml)
 
 **If you have changed the name in the ESPHome config:**
 1. Paste the content into a text editor
@@ -138,7 +138,7 @@ Copy the contents of the Home Assistant card for your vacuum generation
 4. Paste the contents of the card (if you changed the name, then the version that you changed)
 
 ### Vacuum Entity
-You can also use neato-connected as an Home Assistant vacuum entity. The vacuum entity is needed in case you want to use any of the automations or scripts.
+You can also use neato-brainslug as an Home Assistant vacuum entity. The vacuum entity is needed in case you want to use any of the automations or scripts.
 
 ![Vacuum entity](pics/setup/ha-step_6-vacuum-entity.png)
 

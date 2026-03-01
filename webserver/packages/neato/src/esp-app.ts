@@ -447,7 +447,7 @@ export default class EspApp extends LitElement {
       <div style="display:flex;justify-content:center;flex-direction:column;align-items:center;">
 
       <span class="helper">
-        The manual for the Webserver can be found <a href="https://github.com/Philip2809/neato-connected/blob/next/manual.md" target="_blank">here</a>.
+        The manual for the Webserver can be found <a href="https://github.com/Philip2809/neato-brainslug/blob/next/manual.md" target="_blank">here</a>.
       </span>
       
 
