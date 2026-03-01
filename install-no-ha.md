@@ -23,6 +23,7 @@ I have made some prebuilt images for reccomended ESP32s, however, if you have an
 
 
 **If your ESP device does not have GPIO 17 and 16, please ask me for a build!**
+**ESP32-C3 HAS TX ON GPIO7 and RX ON GPIO6, so in that case just remove the "1" from the image below, connect the blue wire to GPIO6 and yellow wire to GPIO7**
 
 **If you have multiple vacuums you will need prebuild images with different names or it will be annoying to connect to them, please ask for me for a build!**
 
