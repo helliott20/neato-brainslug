@@ -1,12 +1,12 @@
 # Install without Home Assistant
 
-You can also use this method without Home Assistant, however only version 1 will be supported for this route, since later versions will require a docker container with [ros2](https://www.ros.org/) for the floormap functions.
+You can also use this repair without Home Assistant, however future versions of neato-brainslug will require a docker conatiner that is running, easiest installation will be via home assistant.
 
-# TODO: add images
+![Webserver](pics/setup/step_4-webserver-connected.png)
 
 **Overview of steps**
-1. Flash ESP device with prebuild images
-2. Connect to robot
+1. Flash ESP device with prebuilt images
+2. Connect to esp wifi
 3. Configure wifi
 4. Make sure it works
 5. Fix ESP device inside or outside robot
@@ -14,12 +14,15 @@ You can also use this method without Home Assistant, however only version 1 will
 
 ### Step 1
 I have made some prebuilt images for reccomended ESP32s, however, if you have another ESP32 that is not listed here, ask me and I will build you one!
-# TODO: add links
-- ESP32
-- ESP32-S3
-- ESP32-C3
+ `gen2`  | `gen3` |
+|---|---|
+| [ESP32](https://github.com/philip2809/neato-brainslug/releases/latest/download/nbs-gen2-esp32.factory.bin) | [ESP32](https://github.com/philip2809/neato-brainslug/releases/latest/download/nbs-gen3-esp32.factory.bin) |
+| [ESP32-S3](https://github.com/philip2809/neato-brainslug/releases/latest/download/nbs-gen2-esp32-s3.factory.bin) | [ESP32-S3](https://github.com/philip2809/neato-brainslug/releases/latest/download/nbs-gen3-esp32-s3.factory.bin) |
+| [ESP32-C3](https://github.com/philip2809/neato-brainslug/releases/latest/download/nbs-gen2-esp32-c3.factory.bin) | [ESP32-C3](https://github.com/philip2809/neato-brainslug/releases/latest/download/nbs-gen3-esp32-c3.factory.bin) |
+
 
 **If your ESP device does not have GPIO 17 and 16, please ask me for a build!**
+**ESP32-C3 HAS TX ON GPIO7 and RX ON GPIO6, so in that case just remove the "1" from the image below, connect the blue wire to GPIO6 and yellow wire to GPIO7**
 
 **If you have multiple vacuums you will need prebuild images with different names or it will be annoying to connect to them, please ask for me for a build!**
 
@@ -29,8 +32,9 @@ Now that you have the image you need to flash this. The easiest way to do this i
 
 Once in ESPHome Web, connect your device to your computer, while going into bootloader mode, then select it in the list. Once selected, upload the firmware file you downloaded before and wait for it to finish.
 
+### Step 2
 With the device still connected to your computer, go to the wifi settings of your computer or phone and connect to the network hosted by the esp device.
-- SSID: `Neato-ESPHOME`
+- SSID: `neato-brainslug`
 - Password: `make-it-suck-again`
 
 Once you have connected your browser should automatically open a window to "login" to the network, you may need to see your notifications on the phone or open the web browser on a computer, but if none of that works, go to [`http://192.168.4.1/`](http://192.168.4.1/) manually. 
@@ -48,9 +52,8 @@ If neither of these link work, please check that the device actually connected t
 
 ### Step 4
 When you have navigated to the site of the ESP device it should look something like this:
-# todo: add image
-
-This is the webserver of the device. It will show up as not connected since we are not connected to the robot, we are only connected to a power source so that the ESP device can be configured. Now you can connect the device to the robot via the debug port to make sure that it works are you want to! To do this:
+![Webserver disconnected](pics/setup/step_4-webserver-disconnected.png)
+This is the webserver of the device. It will show up as not "loading..." since we are not connected to the robot, we are only connected to a power source so that the ESP device can be configured. Now you can connect the device to the robot via the debug port to make sure that it works are you want to! To do this:
 1. Turn the robot off
 2. Take of the bumper off the robot
 3. Connect to the robot
@@ -61,29 +64,31 @@ This is the webserver of the device. It will show up as not connected since we a
     |TX|GPIO16|
     |GND|GND|
 
-    ![Connection diagram](pics/setup/noha-step_4-connection-diagram.png)
+    **ESP32-C3 HAS TX ON GPIO7 and RX ON GPIO6, so in that case just remove the "1" from the image below, connect the blue wire to GPIO6 and yellow wire to GPIO7**
+
+    ![Connection diagram](pics/setup/step_4-connection-diagram.png)
 4. Turn the robot back on, this should power up the ESP device and you can now go to the webserver interface page we saw before and the data from the robot should now show up.
-    # todo: add image
-5. Click the different buttons to make sure that it works, if you have a D3-D7, drive it around with the manual mode, however, remember that the bumper is not attached.
+    ![Webserver connected](pics/setup/step_4-webserver-connected.png)
+5. Click the different buttons to make sure that it works, if you have a gen3 robot, drive it around with the manual mode!
 
 ### Step 5
-
-Once you are ready for the permanent installation, go here: [Permanent installation](./install-internally.md)
+Now lets install the ESP device:
+- [`gen2`](./install-esp-device-gen2.md)
+- [`gen3`](./install-esp-device-gen3.md)
 
 ### Step 6
 Now you can enjoy your locally controllable neato vacuum cleaner.
 
 Eventually there will be updates, either as new features or stability fixes, however all of this connecting and flashing will no longer be required since ESPHome have support for OTA-updates. To update when a new version comes out, you will need to:
-1. Download the OTA update file from (github releases)[add link]
-2. 
-    Downloads for reccomended ESP32 devices is here:
-    # TODO: add links
-    - ESP32
-    - ESP32-S3
-    - ESP32-C3
-3. Go to the webserver of the device and upload the file under the OTA section
-    # TODO: add image
-4. Wait for it to update and restart then refresh the page, you should now be on the latest version!
+1. Download the OTA update file for your device, recommended ESP32 devices is here:
+    |`gen2`  | `gen3` |
+    |---|---|
+    | [ESP32](https://github.com/philip2809/neato-brainslug/releases/latest/download/nbs-gen2-esp32.ota.bin) | [ESP32](https://github.com/philip2809/neato-brainslug/releases/latest/download/nbs-gen3-esp32.ota.bin) |
+    | [ESP32-S3](https://github.com/philip2809/neato-brainslug/releases/latest/download/nbs-gen2-esp32-s3.ota.bin) | [ESP32-S3](https://github.com/philip2809/neato-brainslug/releases/latest/download/nbs-gen3-esp32-s3.ota.bin) |
+    | [ESP32-C3](https://github.com/philip2809/neato-brainslug/releases/latest/download/nbs-gen2-esp32-c3.ota.bin) | [ESP32-C3](https://github.com/philip2809/neato-brainslug/releases/latest/download/nbs-gen3-esp32-c3.ota.bin) |
+2. Go to the webserver of the device and upload the file under the OTA section, then press "UPDATE"
+    ![OTA update](pics/setup/step_6-webserver-ota.png)
+3. Wait for it to update and restart then refresh the page, you should now be on the latest version!
 
 
 

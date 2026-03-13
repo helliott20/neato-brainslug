@@ -1,25 +1,46 @@
+[buymeacoffee]: https://www.buymeacoffee.com/philip2809
+[buymeacoffee-shield]: https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png
 
-[![release][release-badge]][release-url]
+<div align="center">
+  <img alt="neato-brainslug Logo" src="./pics/logo.svg" width="250">
+  <h1>neato-brainslug</h1>
+</div>
+
+<div align="center">
+
+_Control your Neato vacuum locally with an ESPHome brainslug_
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V61PBIY6)
 [![Buy me a coffee][buymeacoffee-shield]][buymeacoffee]
 
-[buymeacoffee]: https://www.buymeacoffee.com/philip2809
-[buymeacoffee-shield]: https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png
-[release-url]: https://github.com/philip2809/neato-connected/releases
-[release-badge]: https://img.shields.io/github/v/release/philip2809/neato-connected?style=flat-square
+  <h2>
+      <a href="https://discord.gg/PAgwhWvyD8">
+        Discord
+      </a>
+      <span> | </span>
+      <a href="faq.md">
+        FAQ
+      </a>
+      <span> | </span>
+      <a href="manual.md">
+        Manual
+      </a>
+      <span> | </span>
+      <a href="#beta">
+        Beta
+      </a>
+      <span> | </span>
+      <a href="https://openpetition.org/!wknmd">
+        Sign the petition
+      </a>
+</div>
 
-### [Discord](https://discord.gg/PAgwhWvyD8)
 
-### [Sign the petition](https://openpetition.org/!wknmd)
 
-# neato-connected
 
-### What is this?
+Repair your Neato Robot Vacuum to be controlled locally after the shutdown of the Neato servers. The scope of this project is to give your robot at least the same functionallity as when you bought it, however the project is in a development state. The `main` branch only gets updates on releases, check out the `next` branch for the latest updates!
 
-Repair your Neato Robot Vacuum to be controlled via locally after the shutdown of the Neato servers. The scope of this project is to give your robot at least the same functionallity as when you bought it, however as the project is in a development state. 
-
-Since there is a couple of robots from neato and they have different firmware versions, they will need different configurations. I have decided they will be grouped based on their "generation".
+Since there is a couple of robots from Neato and they have different firmware versions, they will need different configurations. I have decided they will be grouped based on their "generation".
 
 - `gen1` - (Generation 1)
     - XV11
@@ -34,17 +55,18 @@ Since there is a couple of robots from neato and they have different firmware ve
     - Neato Botvac D75
     - Neato Botvac D80
     - Neato Botvac D85
-    - Neato Botvac Connected **(Non DX)** `905-0249`
+    - Neato Botvac Connected **(Non DX)** `905-0249`, `905-0317`
 - `gen3` - (Generation 3)
-    - Neato Botvac D3 Connected `905-0321`
-    - Neato Botvac D4 Connected `905-0499`
-    - Neato Botvac D5 Connected `905-0358`
-    - Neato Botvac D6 Connected `905-0496`
-    - Neato Botvac D7 Connected `905-0415`
+    - Neato Botvac D3 Connected `905-0321`, `905-0437`, `905-0327`
+    - Neato Botvac D4 Connected `905-0499`, `905-0514`
+    - Neato Botvac D5 Connected `905-0358`, `905-0357`, `905-0402`
+    - Neato Botvac D6 Connected `905-0496`, `905-0517`
+    - Neato Botvac D7 Connected `905-0415`, `905-0537`
 - `gen 4` (Generation 4) - Sadly not yet supported
-    - Neato Botvac D8 Connected
-    - Neato Botvac D9 Connected
-    - Neato Botvac D10 Connected
+    - Neato D800 (very very likely the same as the d8-d10, not confirmed tho)
+    - Neato D8 Intelligent `905-09596`
+    - Neato D9 Intelligent `905-0559`
+    - Neato D10 Intelligent `905-0724`
 
 
 | Feature | `gen1` | `gen2` | `gen3` |
@@ -53,89 +75,73 @@ Since there is a couple of robots from neato and they have different firmware ve
 | Check errors | ✅ | ✅ | ✅ |
 | Status | 🟠 | 🟠 | ✅ |
 | Edit settings | ❌ | ✅ | ✅ |
-| Scheduling on robot | ? | ✅ | ❌ |
+| Scheduling on robot (via screen) | ✅ | ✅ | ❌ |
 | Scheduling via ESPHome | ✅ | ✅ | ✅ |
-| Scheduling via HA Automation | ✅¹ | ✅¹ | ✅¹ |
-| Notifications | ✅¹ | ✅¹ | ✅¹ |
-| Return to start | ❌ | ✅ | ❌ |
-| Return to dock | ❌ | ❌ | ✅ |
-| Manual driving | ❌ | ❌ | ✅ |
+| Scheduling via HA Automation | ✅ ¹ | ✅ ¹ | ✅ ¹ |
+| Notifications | ✅ ¹ | ✅ ¹ | ✅ ¹ |
+| Return to start | ❌ ³ | ✅ | ❌ ³ |
+| Return to dock | ❌ ³ | ❌ ³ | ✅ |
+| Manual driving | ❌ ² | ❌ ² | ✅ |
 
 - ✅ - Supported
 - 🟠 - Limited functionality
 - ❌ - Not supported
 - ¹ - Home Assistant required
+- ² - Support can be added by version 1
+- ³ - Support can be added by version 2
 
-The ability to create, view and edit floormaps so the robot can get the same functionallity with nogo-lines and zones is in the making.
+Please refer to the [status.md](./status.md) for project status, roadmap and version meanings!
+  
+The ability to create, view and edit floormaps so the robot can get the same functionallity with no-go lines and zones is in the making.
 
-Main card | Settings View
-:-------------------------:|:-------------------------:
-![ha-card](./pics/esphome/ha-card.png) |  ![ha-card-settings](./pics/esphome/ha-card-settings.png)
+The reason this works on all Neato robots is because they all have the command interface, even the robots that originally don't have any WiFi, will still work, since it is no longer WiFi robot that is connecting to the WiFi, it is the ESP device. This also removes any limitations the robots WiFi may have had.
 
-### What is supported?
+**`gen1` robots**
+- We are currently looking into the best way to connect to these, please join the [Discord](https://discord.gg/PAgwhWvyD8) where we are currently talking about the best way to do it and the experimentation going on!
 
-**We would like to support all robots where an debug interface, or other controls, is accessible!**
-
-As far as we know, only the D3, D4, D5, D6 and D7 has the firmware `4.5.3` and currenly the config is based on that so the robots that should work with that firmware is as follows:
-- Confirmed working: **D3, D4, D5, D6, D7**
-- Should work with some work: **D70-D85, Connected, XV-series [maybe others? please get in touch!]**
-
-The reason this works on all neato robots is because they all have the command interface, even the robots that originally don't have any wifi will still work, since it is no longer wifi robot that is connecting to the wifi, it is the ESP device. This also removes any limitations the robots wifi may have had.
-
-**Trickier robots**
-- D8 (probably D9, D10) - These robots use a compleatly different board, chip and firmware, and because the debug interface seams to be behind a password lock, this cannot be controlled directly. If you have one of these and are willing to tinker, please get in touch!
-
-### What do I need?
-- You need access to an USB port or the debug pins
-    - We will be going through the different options to access these pins
-- An ESPHome capable device
-    - I would recommend an ESP32
-- Cables to connect the robot to the ESP device
-- The rest depends on your install!
+**`gen4` robots**
+- These robots use a compleatly different board, chip and firmware, and we cannot interface with these directly. However one idea to get the start/stop feature back is to wire an esp32 to the button itself, join the [Discord](https://discord.gg/PAgwhWvyD8) or open an discussion here so we can discuss! 
 
 # Getting started!
 
-To get this up and running you will need to connect to the debug port or usb port on the robot. The XV-series robots have the usb port on the back, the rest has it in the dustbin area, making it inaccicible when using, for these robots we need to connect via the serial debug port, you would also need to do this if you are installing it internally inside the XV-series. So sadly for this repair you will need to get some extra hardware to get it up and running; however we are happy to help you out any step along the way!
+To get this up and running, you will need to connect to the debug port or USB port on the robot. The XV-series robots have the USB port on the back, the rest has it in the dustbin area, making it inaccessible when using, for these robots we need to connect via the serial debug port, you would also need to do this if you are installing it internally inside the XV-series. So, sadly for this repair you will need to get some extra hardware to get it up and running; however we are happy to help you out any step along the way!
 
-First of all we need to get the version of your robot; to do this do the following:
-- If you app still works, check in there
-- Connect to the robot with an usb cable, at the port where the dustbin is
-    - on windows use [NeatoToolio](https://github.com/jdredd87/NeatoToolio) or connect via serial as with unix systems
-    - on unix systems, connect to serial:
-        1. `screen /dev/ttyUSB0 115200`
-        2. Once connected send the command `GetVersion`
-        3. Look for the line with `Software`, this should be `Software,X,X,X,X,X`
-- Restart the robot and send a curl request to `https://<robot-ip>:4443/info` with `--ciphers ALL:@SECLEVEL=0`. This should work both once connected to a wifi and on the robot AP.
+First of all we need to get the version of your robot, do this at the [Version Checker](https://brainslug.phma.dev/version.html)
 
 Since we are parsing the data from the serial interface we need to be on the same verion of the robot firmware, this is what has been confirmed working:
-| D3-D7 | Connected, D70-D85 |
+| `gen2`  | `gen3` |
 |---|---|
-| `4.5.3` or `4.6.0` | `2.2.0` or `2.2.1` |
+| `2.2.0` or `2.2.1` | `4.5.3` or `4.6.0` (note, many `4.X.X` versions will work) |
 
 If you have another version then these; please get in touch!
 
 There is two ways of using this repair:
-| [**Without Home Assistant**](./install-no-ha.md) | [**With Home Assistant**](./install-ha.md) |
-|----------------------------------------|----------------------------------------|
-| <ol><li>Flash ESP device with prebuild images</li><li>Connect to robot</li><li>Configure wifi</li><li>Make sure it works</li><li>Fix ESP device inside or outside robot</li><li>Enjoy a locally connected vacuum!</ol> | <ol><li>Setup HACS and install add-ons</li><li>Setup ESPHome</li><li>Flash ESP device with your image</li><li>Connect to robot</li><li>Add ESP device to Home Assistant</li><li>Setup Home Assistant entity and card</li><li>Make sure it works</li><li>Fix ESP device inside or outside the robot</li><li>Enjoy your locally connected vacuum!</li></ol> |
 
-**If you don't mind to tinker a little bit I really do recommend to check out Home Assistant and do that route.** It is an open source home automation tool that puts local control and privacy first. Read more about them on their [website](https://www.home-assistant.io/) and try their [live demo](https://demo.home-assistant.io) if you want! There is a lot of great guides and information about home hassistant on youtube and their forums! They also have some amazing guides on their [site](https://www.home-assistant.io/installation/) to get an home assistant installation going. If you have any questions or problems, don't hesitate to ask for help here in the [discusstions](https://github.com/Philip2809/neato-connected/discussions) section, on our [discord](https://discord.gg/PAgwhWvyD8) or the home assistant [help](https://www.home-assistant.io/help/) page. 
+- [**Without Home Assistant**](./install-no-ha.md) 
+- [**With Home Assistant**](./install-ha.md)
+
+**If you don't mind to tinker a little bit I really do recommend to check out Home Assistant and do that route.** It is an open source home automation tool that puts local control and privacy first. Read more about them on their [website](https://www.home-assistant.io/) and try their [live demo](https://demo.home-assistant.io) if you want! There is a lot of great guides and information about home hassistant on youtube and their forums! They also have some amazing guides on their [site](https://www.home-assistant.io/installation/) to get an home assistant installation going. If you have any questions or problems, don't hesitate to ask for help here in the [discusstions](https://github.com/Philip2809/neato-connected/discussions) section, on our [Discord](https://discord.gg/PAgwhWvyD8) or the home assistant [help](https://www.home-assistant.io/help/) page. 
 
 **From version 2 of this project, when ROS is used for getting a floormap, you will need a separate computer running ROS, and the easiest and prioritized way to set that up will be via Home Assistant.**
 
+## Beta
+The `main` branch will have the code and guide for the latest release, but in case you want to try the latest beta this version with live on the `next` branch. In case certain features are on their way into the beta, but not in a beta yet, they will live on `next/<feature name>`. 
+
+The config files for the betas will live in the `config` folder instead of the releases tab, where the links in the different guides will point to!
+
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=philip2809/neato-connected&type=date&legend=top-left)](https://www.star-history.com/#philip2809/neato-connected&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=philip2809/neato-brainslug&type=date&legend=top-left)](https://www.star-history.com/#philip2809/neato-brainslug&type=date&legend=top-left)
 
 ## Acknowledgements
 
-- @Fabian Ullrich, Jiska Classen, Johannes Eger and Matthias Hollick from Secure Mobile Networking Lab
+- @Fabian Ullrich, Jiska Classen, Johannes Eger, Matthias Hollick, Fabian Freyer, crunch from Secure Mobile Networking Lab
     - [Security and Privacy for IoT Ecosystems](https://tuprints.ulb.tu-darmstadt.de/handle/tuda/4937)
     - [Vacuums in the Cloud:
 Analyzing Security in a Hardened IoT Ecosystem](https://www.usenix.org/system/files/woot19-paper_ullrich.pdf)
-    - And all of their work on these robots, including talks etc!
+    - And all of their work on these robots!
 - [@jeroenterheerdt](https://github.com/jeroenterheerdt) for testing, reviewing, writing the guide for installing internally and the original [neato-serial](https://github.com/jeroenterheerdt/neato-serial)
 - [@algaen](https://github.com/algaen) for the info about the D8 (D9, D10?) robots
 - [@tomwj](https://github.com/tomwj) for testing and pictures installing it internally in a D7
 - [@RobertSundling](https://github.com/RobertSundling) for the [firmware files](https://github.com/RobertSundling/neato-botvac)
-
+- [@mikeyp] for the amazing logo
