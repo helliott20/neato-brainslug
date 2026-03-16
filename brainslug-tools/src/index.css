@@ -1,0 +1,29 @@
+
+
+#root {
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 1.6rem;
+}
+
+
+body {
+  background: #141414;
+  color: #e0e0e0;
+  font-family: 'Trebuchet MS', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+
+html {
+  font-size: 62.5%;
+}
