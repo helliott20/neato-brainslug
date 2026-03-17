@@ -42,7 +42,7 @@ Once you have connected your browser should automatically open a window to "logi
 When you are on this site you should see the default captive portal that looks like this:
 ![Captive portal on esphome](./pics/setup/noha-step_1-captive-portal.png)
 
-Now you will need to select and enter your wifi details so that the ESP device can connect to it. When you hit save, it will restart and connect to your wifi, if you entered your details incorrectly or it could not connect, the network you just connected to, `Neato-ESPHOME` should show up once again in your wifi settings so you can try again.
+Now you will need to select and enter your wifi details so that the ESP device can connect to it. When you hit save, it will restart and connect to your wifi, if you entered your details incorrectly or it could not connect, the network you just connected to, `neato-brainslug` should show up once again in your wifi settings so you can try again.
 
 Once the device has connected you need to verify that it works and you can see the web server it is hosting before we continue. For most people one of two links will bring you to the ESP device's web server:
 - [`neato-vacuum.local`](http://neato-vacuum.local)
