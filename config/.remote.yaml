@@ -1,0 +1,42 @@
+substitutions:
+  name: neato-vacuum # If you want another name, change it here, remeber to replace it in the ha-card.yaml!
+  comment: "" # If you want to write a comment about this vacuum, do so here. e.g. "Downstairs garage vacuum"
+
+  infointerval: 2sec
+  chargerinterval: 2min
+
+  ota_password: !secret neato_vacuum_ota
+
+  ### If you are using ha:
+  # wifi_ssid: !secret wifi_ssid
+  # wifi_password: !secret wifi_password
+  # ha_encryption_key: !secret neato_vacuum_api
+
+  ### If you want to change the UART Pins
+  # uart_tx: 17
+  # uart_rx: 16
+
+
+wifi:
+  ### If your router sets another TLD for local devices, specify that here
+  # domain: .lan
+  ### If you are having issues with the dns or are 100% this will be the ip, you can spesify that here
+  # use_address: 192.168.205.199
+
+
+packages:
+  remote_package_files:
+    url: https://github.com/philip2809/neato-brainslug
+    files:
+      - config/boards/esp32.yaml
+      # - config/boards/esp32c3.yaml
+      # - config/boards/esp32s3.yaml
+      # - config/boards/esp32s2.yaml
+
+      # - config/ha.yaml             # Remember to set wifi credentials and ha_encryption_key in the substitutions if you are using this
+      - config/no-ha.yaml
+
+      - config/webserver.yaml
+      - config/gen3.yaml
+      # - config/gen2.yaml
+    ref: main

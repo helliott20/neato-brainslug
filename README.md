@@ -104,7 +104,7 @@ The reason this works on all Neato robots is because they all have the command i
 
 # Getting started!
 
-To get this up and running, you will need to connect to the debug port or USB port on the robot. The XV-series robots have the USB port on the back, the rest has it in the dustbin area, making it inaccessible when using, for these robots we need to connect via the serial debug port, you would also need to do this if you are installing it internally inside the XV-series. So, sadly for this repair you will need to get some extra hardware to get it up and running; however we are happy to help you out any step along the way!
+For this repair you will need some tools to connect an ESP device, if you already have an ESP device, awesome try using that, but if you don't already have one you should buy one according to what we have found works best. ESPs recommended by ESPHome (`ESP32`, `ESP32S3` and `ESP32C3`) will all work and have prebuilt files for easy installation, however some ESP devices that are very cheap and small should be avoided since they have some defects and need to use a lower power output on the wifi signal. Please check [supported-esp32.md](./supported-esp32.md) for more information!
 
 First of all we need to get the version of your robot, do this with the [Brainslug Tools](https://brainslug.phma.dev/#/robot)
 

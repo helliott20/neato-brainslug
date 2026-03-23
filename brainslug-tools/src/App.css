@@ -74,4 +74,38 @@ a.tool-card:hover {
   align-items: center;
   gap: 20px;
   margin: auto;
+
+  text-align: center;
+
+  p {
+    font-size: 1.8rem;
+    color: #aaa;
+    line-height: 1.7;
+  }
+
+  strong {
+    color: #e0e0e0;
+  }
+
+  .warn {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #c0605a;
+  }
+
+  .success {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #5ac060;
+  }
+
+  a {
+    color: #5ac060;
+    font-weight: 500;
+    transition: color 0.2s ease-in-out;
+
+    &:hover {
+      color: #7cd080;
+    }
+  }
 }

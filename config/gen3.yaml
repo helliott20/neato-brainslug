@@ -1,70 +1,24 @@
-# !!! WHAT YOU WILL NEED TO CHANGE !!!
-# If you need any help, don't hesitate to ask for it in the discord or discussions!
-
-# platform, based on https://esphome.io/components/#supported-microcontrollers 
-# If you are using an ESP32, set your variant to which one you have e.g. ESP32C3, ESP32S3, ESP32C6 etc
-# if you are using an ESP8266, remove the "esp32" part and define an "esp8266" you will NEED to add "restore_from_flash" to "true"
-esp32:
-  variant: ESP32
-  framework:
-    type: esp-idf
-
-# You will need to figure out which pins work on your board for UART.
 substitutions:
-  uart_tx: <SET BASED ON YOUR DEVICE>
-  uart_rx: <SET BASED ON YOUR DEVICE>
-  comment: "" # If you want to write a comment about this vacuum, do so here. e.g. "Downstairs garage vacuum"
-
-  infointerval: 2sec
-  chargerinterval: 2min
-
-  reboot_timeout: 15min # if you have Home Assistant but not always connected, put this to "0s" to disable it, the esp will only reboot if the api connection is lost, after the time specified here
-
-  # ---- Version and robot type ----
-  version: "1.2"
+  version: "1.2.1"
   type: "gen3"
-  buildinfo: "${version}-[${uart_tx}/${uart_rx}]"
-  # --------------------------------
+  buildinfo: "${version} [TX:${uart_tx} RX:${uart_rx}]"
 
-  time_platform: homeassistant # use "homeassistant" if you are using Home Assistant, use "sntp" if not
-  timezone: null # if you have Home Assistant, you don't need this, if you use sntp, then define your timezone here!
-
-# If you don't want the webserver, uncomment/remove this part
-web_server:
-  port: 80
-  js_url: "https://cdn.jsdelivr.net/gh/philip2809/neato-brainslug@main/config/js/1.2.js"
 
 logger:
-  baud_rate: 0
-
-ota:
-  - platform: esphome
-    password: !secret neato_vacuum_ota
+improv_serial:
+captive_portal:
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-
   ap:
     ssid: "neato-brainslug"
     password: "make-it-suck-again"
 
-  # If your router sets another TLD for local devices, specify that here
-  #domain: .lan
-  # If you are having issues with the dns or are 100% this will be the ip, you can spesify that here
-  #use_address: 192.168.205.199
-
-captive_portal:
+ota:
+  - platform: esphome
+    password: ${ota_password}
 
 esphome:
-  name: neato-vacuum # If you want another name, change it here, remeber to replace it in the ha-card.yaml!
-##############################################################################################################################
-
-#   Combatability between esphome config and this card is ensured as long as the
-#   minor version's match, for relase candicates, betas etc (indicated by X.X-a/b/rc.X), the version
-#   has to match perfectly otherwise compatability is not promised. 
-#
-#   Please try to keep the versions the same, and check the github for updates!
+  name: ${name}
   project: 
     name: philip2809.neato-brainslug
     version: ${buildinfo}
@@ -117,39 +71,6 @@ esphome:
             );
 
             id(scheduleset).publish_state(buf);
-
-
-api:
-  encryption:
-    key: !secret neato_vacuum_api
-
-  reboot_timeout: ${reboot_timeout}
-
-  actions:
-    - action: send_cmd
-      variables:
-        command: string
-      then:
-        - uart.write: !lambda |-
-            // Convert to std::string
-            std::string s = command;
-
-            // IMPORTANT: keep newline exactly like YAML version
-            if (s.empty() || s.back() != '\n')
-              s += "\n";
-
-            // convert string → vector<uint8_t>
-            return std::vector<uint8_t>(s.begin(), s.end());
-
-    - action: play_sound
-      variables:
-        soundid: int
-      then:
-        - uart.write: !lambda |-
-            // Create std::string
-            std::string s = "PlaySound SoundId " + std::to_string(soundid) + "\n";
-            // convert string → vector<uint8_t>
-            return std::vector<uint8_t>(s.begin(), s.end());
 
 
 script:
@@ -518,7 +439,15 @@ uart:
               // Extract Robot state
               if (robot_line.find(prefix_robot) == 0) {
                   std::string robot_state = robot_line.substr(strlen(prefix_robot));
+                  
+                  // Remove trailing \x1A if present
+                  size_t ctrl_z = robot_state.find('\x1A');
+                  if (ctrl_z != std::string::npos) {
+                      robot_state.erase(ctrl_z);
+                  }
+
                   trim(robot_state);
+                  
                   id(robotState).publish_state(robot_state.c_str());
               }
           }
@@ -569,7 +498,6 @@ uart:
 
 time:
   - platform: ${time_platform}
-    timezone: ${timezone}
     id: nbs_time
     on_time:
       - minutes: /10

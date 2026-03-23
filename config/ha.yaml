@@ -1,0 +1,38 @@
+substitutions:
+  time_platform: homeassistant
+
+wifi:
+  ssid: ${wifi_ssid}
+  password: ${wifi_password}
+
+api:
+  encryption:
+    key: ${ha_encryption_key}
+
+  actions:
+    - action: send_cmd
+      variables:
+        command: string
+      then:
+        - uart.write: !lambda |-
+            // Convert to std::string
+            std::string s = command;
+
+            // IMPORTANT: keep newline exactly like YAML version
+            if (s.empty() || s.back() != '\n')
+              s += "\n";
+
+            // convert string → vector<uint8_t>
+            return std::vector<uint8_t>(s.begin(), s.end());
+
+    - action: play_sound
+      variables:
+        soundid: int
+      then:
+        - uart.write: !lambda |-
+            // Create std::string
+            std::string s = "PlaySound SoundId " + std::to_string(soundid) + "\n";
+            // convert string → vector<uint8_t>
+            return std::vector<uint8_t>(s.begin(), s.end());
+
+

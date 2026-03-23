@@ -201,8 +201,11 @@ export default class EspApp extends LitElement {
     this.scheme = this.schemeDefault();
     window.source.addEventListener("ping", (e: MessageEvent) => {
       if (e.data?.length) {
-        this.setConfig(JSON.parse(e.data));
-        this.requestUpdate();
+        const data = JSON.parse(e.data);
+        if (data.title !== undefined) {
+          this.setConfig(data);
+          this.requestUpdate();
+        }
       }
       this._updateUptime(e);
       this.lastUpdate = Date.now();

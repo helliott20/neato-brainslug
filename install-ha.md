@@ -99,10 +99,12 @@ This is the webserver of the device. It will show up as not connected since we a
 3. Connect to the robot - if you have an `gen2` robot, proceed to [the install guide](./install-esp-device-gen2.md)
     | Robot | ESP |
     |---|---|
-    |RX|GPIO17|
+    |RX|GPIO17 (TX of esp device)|
     |3.3V|3.3V|
-    |TX|GPIO16|
+    |TX|GPIO16 (RX of esp device)|
     |GND|GND|
+
+    When it comes to UART, TX connects to RX and RX connects to TX. 
 
     ![Connection diagram](pics/setup/step_4-connection-diagram.png)
 4. Turn the robot back on, this should power up the ESP device and you can now go to the webserver interface page we saw before and the data from the robot should now show up!

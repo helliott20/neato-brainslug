@@ -7,7 +7,7 @@ variables:
     not promised. Please try to keep the versions the same, and check the github
     for updates!
   project: philip2809.neato-brainslug
-  version: "1.2"
+  version: "1.2.1"
   type: "gen3"
 cards:
   - type: custom:button-card
