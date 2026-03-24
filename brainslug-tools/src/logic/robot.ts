@@ -78,9 +78,9 @@ export class Robot {
 
     parseData(data: string) {
         console.log('Parsing data:', data);
-        if (data.includes('Component,Major,Minor,Build,Aux')) this.version = { ...parseKeys(data, GetVersionKeys), ...this.version };
-        else if (data.includes('Label,Value') && data.includes('BattTempCAvg')) this.charger = { ...parseKeys(data, GetChargerKeys), ...this.charger };
-        else if (data.startsWith('GetErr')) this.error = { ...parseGetErr(data), ...this.error };
+        if (data.includes('Component,Major,Minor,Build,Aux')) this.version = { ...this.version, ...parseKeys(data, GetVersionKeys) };
+        else if (data.includes('Label,Value') && data.includes('BattTempCAvg')) this.charger = { ...this.charger, ...parseKeys(data, GetChargerKeys) };
+        else if (data.startsWith('GetErr')) this.error = { ...this.error, ...parseGetErr(data) };
         console.log('Updated robot data:', { version: this.version, charger: this.charger });
         updateRobotStore();
     }

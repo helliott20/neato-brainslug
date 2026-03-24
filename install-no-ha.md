@@ -28,6 +28,10 @@ The easiest way to flash your ESP device is with the Brainslug Web Flasher.
 **If you get any errors about unsupported devices, then you are not using a recommended ESP32, please ask me for a build in that case!**
 **If you have multiple vacuums you will need prebuild images with different names or it will be annoying to connect to them, please ask for me for a build!** 
 
+Once you have it installed it should go back to this menu:
+![menu flashed with improv](pics/setup/brainslug-web-flasher-menu-flashed.png)
+Here you can also configure the wifi settings if your device is not too exotic, if you cannot configure the wifi here, continue onto step 2.
+
 ### Step 2
 With the device still connected to your computer, go to the wifi settings of your computer or phone and connect to the network hosted by the esp device.
 - SSID: `neato-brainslug`
