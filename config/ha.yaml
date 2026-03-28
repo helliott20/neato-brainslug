@@ -35,4 +35,26 @@ api:
             // convert string → vector<uint8_t>
             return std::vector<uint8_t>(s.begin(), s.end());
 
+    - action: lidar_scan
+      then:
+        - script.execute: lidar_scan
+
+    - action: lidar_scan_continuous
+      then:
+        - script.execute: lidar_scan_continuous
+
+    - action: lidar_stop
+      then:
+        - script.execute: lidar_stop
+
+    - action: set_nogo_zones
+      variables:
+        zones_json: string
+      then:
+        - lambda: !lambda |-
+            id(g_nogo_zones) = zones_json;
+            id(nogo_zones_text).publish_state(zones_json.c_str());
+            id(nogoZonesData).publish_state(zones_json.c_str());
+            ESP_LOGI("nogo", "Zones set via HA: %s", zones_json.c_str());
+
 

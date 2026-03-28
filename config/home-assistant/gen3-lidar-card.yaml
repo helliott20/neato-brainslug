@@ -1,0 +1,76 @@
+# Neato LIDAR Map Card Configuration
+# Add this to your Home Assistant dashboard
+#
+# Prerequisites:
+# 1. neato_lidar_map custom integration installed
+# 2. Brainslug device with LIDAR support flashed
+#
+# Usage:
+# Add a Picture Entity card or use the YAML below
+
+# Simple Picture Entity Card (shows the LIDAR map image)
+type: picture-entity
+entity: camera.neato_lidar_map_lidar_map
+name: Neato LIDAR Map
+show_state: false
+show_name: true
+camera_view: auto
+
+---
+
+# Full LIDAR Control Panel (vertical-stack)
+# Copy this into a Manual Card in your dashboard
+type: vertical-stack
+cards:
+  # LIDAR Map Image
+  - type: picture-entity
+    entity: camera.neato_lidar_map_lidar_map
+    name: LIDAR Map
+    show_state: false
+    camera_view: auto
+
+  # LIDAR Control Buttons
+  - type: horizontal-stack
+    cards:
+      - type: button
+        entity: button.neato_vacuum_lidar_scan
+        name: Single Scan
+        icon: mdi:radar
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.neato_vacuum_lidar_scan
+
+      - type: button
+        entity: button.neato_vacuum_lidar_scan_continuous
+        name: Continuous
+        icon: mdi:refresh-auto
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.neato_vacuum_lidar_scan_continuous
+
+      - type: button
+        entity: button.neato_vacuum_lidar_stop
+        name: Stop
+        icon: mdi:stop
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.neato_vacuum_lidar_stop
+
+  # LIDAR Stats
+  - type: entities
+    title: LIDAR Info
+    entities:
+      - entity: sensor.neato_vacuum_lidar_scan_quality
+        name: Scan Quality
+      - entity: sensor.neato_vacuum_lidar_nearest_distance
+        name: Nearest Obstacle
+      - entity: sensor.neato_vacuum_lidar_nearest_angle
+        name: Nearest Angle
+      - entity: binary_sensor.neato_vacuum_lidar_scanning
+        name: Scanning Active

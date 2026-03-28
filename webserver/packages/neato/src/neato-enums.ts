@@ -122,4 +122,27 @@ export const TextSensor = {
     software: "text_sensor-software",
     ui_state: "text_sensor-ui_state",
     nbs_time: "text_sensor-nbs_time",
+    lidar_scan_data: "text_sensor-lidar_scan_data",
+}
+
+export const LidarButton = {
+    lidar_scan: "button-lidar_scan",
+    lidar_scan_continuous: "button-lidar_scan_continuous",
+    lidar_stop: "button-lidar_stop",
+}
+
+export const LidarSensor = {
+    scan_quality: "sensor-lidar_scan_quality",
+    nearest_dist: "sensor-lidar_nearest_distance",
+    nearest_angle: "sensor-lidar_nearest_angle",
+}
+
+export const LidarBinarySensor = {
+    scanning: "binary_sensor-lidar_scanning",
+    zone_violation: "binary_sensor-zone_violation",
+}
+
+export const NoGoZones = {
+    zones_data: "text_sensor-no_go_zones",
+    zones_config: "text-no_go_zones_config",
 }

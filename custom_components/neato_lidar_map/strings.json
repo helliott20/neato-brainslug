@@ -1,0 +1,18 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Neato LIDAR Map",
+        "description": "Configure the LIDAR map camera. Select the LIDAR Scan Data text sensor entity from your Neato Brainslug device. Optionally add position sensors for map building during cleaning.",
+        "data": {
+          "lidar_entity": "LIDAR Scan Data entity",
+          "pos_x_entity": "Robot Position X entity (optional)",
+          "pos_y_entity": "Robot Position Y entity (optional)",
+          "pos_heading_entity": "Robot Heading entity (optional)",
+          "image_size": "Map image size (pixels)",
+          "max_range": "Maximum range (mm)"
+        }
+      }
+    }
+  }
+}

@@ -10,12 +10,13 @@ import "./esp-range-slider";
 import "./esp-schedule";
 import "./timezone-selector";
 import "./manual-driving";
+import "./lidar-map";
 import "iconify-icon";
 import cssReset from "./css/reset";
 import cssButton from "./css/button";
 import cssApp from "./css/app";
 import cssTab from "./css/tab";
-import { BinarySensor, Button, Button_Gen2, Button_Gen3, ESPNumber, ESPText, Select, Select_gen3, Sensor, Switch, Switch_gen2, TextSensor } from "./neato-enums";
+import { BinarySensor, Button, Button_Gen2, Button_Gen3, ESPNumber, ESPText, Select, Select_gen3, Sensor, Switch, Switch_gen2, TextSensor, LidarSensor } from "./neato-enums";
 import { entityStore } from "./entity-store";
 import { ActionRenderer } from "./custom-table";
 import { getBasePath } from "./utils";
@@ -414,6 +415,21 @@ export default class EspApp extends LitElement {
       </div>
     </div>
 
+
+    ${this.nbsconfig?.type === "gen3" ? html`
+    <div class="main-grid">
+      <div style="display:flex;justify-content:center;flex-direction:column;align-items:center;grid-column: 1 / -1;">
+        <h3 style="margin:0.5rem 0">LIDAR Map</h3>
+        <lidar-map></lidar-map>
+        <hr style="width: 100%; margin-top: 1rem;">
+        <custom-table .entityIds="${[
+          LidarSensor.scan_quality,
+          LidarSensor.nearest_dist,
+          LidarSensor.nearest_angle,
+        ]}"></custom-table>
+      </div>
+    </div>
+    ` : nothing}
 
     <div class="main-grid">
       <div style="display:flex;justify-content:center;flex-direction:column;align-items:center;">

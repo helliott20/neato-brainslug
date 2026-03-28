@@ -72,6 +72,12 @@ esphome:
 
             id(scheduleset).publish_state(buf);
 
+            // Restore no-go zones
+            if (!id(g_nogo_zones).empty()) {
+              id(nogo_zones_text).publish_state(id(g_nogo_zones).c_str());
+              id(nogoZonesData).publish_state(id(g_nogo_zones).c_str());
+            }
+
 
 script:
   - id: get_user_settings
@@ -121,7 +127,7 @@ script:
       - uart.write: "SetSystemMode PowerCycle \n"
 
   - id: cleaning_stopped
-    then: 
+    then:
       - lambda: !lambda |-
           uint64_t now_ts = id(nbs_time).now().timestamp;
           uint64_t start_ts = id(g_last_cleaning_start_time);
@@ -131,6 +137,29 @@ script:
               id(g_last_cleaning_duration) = duration_min;
               id(last_cleaning_duration).publish_state(duration_min);
           }
+      # Auto LIDAR scan when cleaning finishes (robot is still awake, LIDAR spinning)
+      - delay: 2sec
+      - script.execute: lidar_scan
+      - lambda: 'id(lidar_during_clean).stop();'
+
+  - id: cleaning_started
+    then:
+      - script.execute: lidar_during_clean
+
+  - id: lidar_during_clean
+    mode: restart
+    then:
+      - delay: 10sec
+      - while:
+          condition:
+            lambda: |-
+              std::string st = id(uiState).state;
+              return st.find("CLEANING") != std::string::npos;
+          then:
+            - uart.write: "GetLDSScan \n"
+            - delay: 2sec
+            - uart.write: "GetRobotPos Smooth \n"
+            - delay: 10sec
 
   - id: play_extra_sounds
     parameters:
@@ -154,6 +183,31 @@ script:
           std::string s =
             "SetEvent event " + event + " SKey " + id(robot_skey) + "\n";
           return std::vector<uint8_t>(s.begin(), s.end());
+
+  - id: lidar_scan
+    mode: queued
+    then:
+      - lambda: 'id(lidarScanning).publish_state(true);'
+      - uart.write: "GetLDSScan \n"
+      # g_lidar_scanning stays false for single scan; parser will publish false
+
+  - id: lidar_scan_continuous
+    mode: restart
+    then:
+      - lambda: 'id(g_lidar_scanning) = true;'
+      - lambda: 'id(lidarScanning).publish_state(true);'
+      - while:
+          condition:
+            lambda: 'return id(g_lidar_scanning);'
+          then:
+            - uart.write: "GetLDSScan \n"
+            - delay: 1000ms
+      - lambda: 'id(lidarScanning).publish_state(false);'
+
+  - id: lidar_stop
+    then:
+      - lambda: 'id(g_lidar_scanning) = false;'
+      - lambda: 'id(lidarScanning).publish_state(false);'
 
 
 globals:
@@ -193,6 +247,44 @@ globals:
     restore_value: yes
     initial_value: ''
 
+  # --- LIDAR ---
+  - id: g_lidar_scan_json
+    type: std::string
+    restore_value: no
+    initial_value: ''
+
+  # --- No-Go Zones ---
+  # Stored as JSON string: [{"name":"zone1","x1":0,"y1":0,"x2":100,"y2":100,"enabled":true}, ...]
+  - id: g_nogo_zones
+    type: std::string
+    restore_value: yes
+    initial_value: '[]'
+
+  - id: g_zone_violation
+    type: bool
+    restore_value: no
+    initial_value: 'false'
+
+  - id: g_lidar_scanning
+    type: bool
+    restore_value: no
+    initial_value: 'false'
+
+  - id: g_lidar_scan_quality
+    type: int
+    restore_value: no
+    initial_value: '0'
+
+  - id: g_lidar_nearest_dist
+    type: int
+    restore_value: no
+    initial_value: '0'
+
+  - id: g_lidar_nearest_angle
+    type: int
+    restore_value: no
+    initial_value: '0'
+
 
 interval:
   - interval: ${infointerval}
@@ -209,7 +301,7 @@ uart:
   baud_rate: 115200
   tx_pin: ${uart_tx}
   rx_pin: ${uart_rx}
-  rx_buffer_size: 2048
+  rx_buffer_size: 8192
   debug:
     dummy_receiver: true
     direction: RX
@@ -419,12 +511,14 @@ uart:
 
                       id(last_cleaning_time).publish_state(id(nbs_time).now().strftime("%Y-%m-%d %H:%M:%S"));
                       id(last_cleaning_type).publish_state("SPOT");
+                      id(cleaning_started).execute();
                   } else if (!old_house && new_house) {
                       id(g_last_cleaning_start_time) = id(nbs_time).now().timestamp;
                       id(g_last_cleaning_type) = 0;  // HOUSE = 0
 
                       id(last_cleaning_time).publish_state(id(nbs_time).now().strftime("%Y-%m-%d %H:%M:%S"));
                       id(last_cleaning_type).publish_state("HOUSE");
+                      id(cleaning_started).execute();
                   } else {
                       // Cleaning stopped
                       bool old_cleaning = old_spot || old_house;
@@ -493,7 +587,139 @@ uart:
                 id(numberDustBinFull).publish_state(atof(val.c_str()));
               } 
             }
-          } else if (command.find("ARCHES Board") != std::string::npos) id(uiState).publish_state("Starting...");
+          } else if (command == "GetLDSScan" || command.find("AngleDeg") != std::string::npos) {
+            // GetLDSScan response format:
+            // GetLDSScan
+            // AngleDeg,DistInMM,Intensity,ErrorCodeHEX
+            // 0,1234,8,0
+            // 1,1230,7,0
+            // ... (360 lines of data)
+
+            // Find the header line to know where data starts
+            size_t data_start = 1;
+            for (size_t i = 0; i < lines.size(); i++) {
+              if (lines[i].find("AngleDeg") != std::string::npos) {
+                data_start = i + 1;
+                break;
+              }
+            }
+
+            // Build compact JSON array: [[angle,dist,intensity], ...]
+            std::string json;
+            json.reserve(6000);
+            json = "[";
+            int valid_count = 0;
+            int total_count = 0;
+            int nearest_dist = 99999;
+            int nearest_angle = 0;
+
+            for (size_t i = data_start; i < lines.size(); i++) {
+              std::string &line = lines[i];
+
+              // Parse CSV: AngleDeg,DistInMM,Intensity,ErrorCodeHEX
+              int angle = 0, dist = 0, intensity = 0, err = 0;
+
+              size_t c1 = line.find(',');
+              if (c1 == std::string::npos) continue;
+              size_t c2 = line.find(',', c1 + 1);
+              if (c2 == std::string::npos) continue;
+              size_t c3 = line.find(',', c2 + 1);
+              if (c3 == std::string::npos) continue;
+
+              angle = atoi(line.substr(0, c1).c_str());
+              dist = atoi(line.substr(c1 + 1, c2 - c1 - 1).c_str());
+              intensity = atoi(line.substr(c2 + 1, c3 - c2 - 1).c_str());
+              err = atoi(line.substr(c3 + 1).c_str());
+
+              total_count++;
+
+              if (err == 0 && dist > 0) {
+                if (valid_count > 0) json += ",";
+                valid_count++;
+                char buf[32];
+                snprintf(buf, sizeof(buf), "[%d,%d,%d]", angle, dist, intensity);
+                json += buf;
+
+                if (dist < nearest_dist) {
+                  nearest_dist = dist;
+                  nearest_angle = angle;
+                }
+              }
+            }
+
+            json += "]";
+
+            if (total_count > 0) {
+              int quality = (valid_count * 100) / total_count;
+              id(g_lidar_scan_quality) = quality;
+              id(g_lidar_nearest_dist) = nearest_dist < 99999 ? nearest_dist : 0;
+              id(g_lidar_nearest_angle) = nearest_angle;
+
+              id(lidarScanQuality).publish_state(quality);
+              id(lidarNearestDist).publish_state(nearest_dist < 99999 ? nearest_dist : 0);
+              id(lidarNearestAngle).publish_state(nearest_angle);
+
+              // Store JSON for SSE streaming
+              id(g_lidar_scan_json) = json;
+
+              // Publish to text sensor for web UI consumption
+              id(lidarScanData).publish_state(json.c_str());
+
+              ESP_LOGI("lidar", "Scan: %d/%d valid, quality=%d%%, nearest=%dmm@%d°",
+                valid_count, total_count, quality, nearest_dist, nearest_angle);
+            }
+
+            // For single scans (g_lidar_scanning is false), mark done
+            // For continuous scans, the script loop handles the state
+            if (!id(g_lidar_scanning)) {
+              id(lidarScanning).publish_state(false);
+            }
+          }
+
+          else if (command == "GetRobotPos" || command.find("PosX") != std::string::npos) {
+            // GetRobotPos response format:
+            // GetRobotPos
+            // PosX,PosY,HeadingDeg
+            // 1234.5,567.8,45.2
+            // (or key-value pairs depending on firmware version)
+
+            for (size_t i = 1; i < lines.size(); i++) {
+              std::string &line = lines[i];
+              if (line.find("PosX") != std::string::npos) continue; // skip header
+
+              // Try CSV format: x,y,heading
+              size_t c1 = line.find(',');
+              if (c1 == std::string::npos) {
+                // Try key-value format
+                size_t eq = line.find(',');
+                if (eq != std::string::npos) {
+                  std::string key = line.substr(0, eq);
+                  std::string value = line.substr(eq + 1);
+                  trim(key);
+                  trim(value);
+                  if (key == "PosX") id(robotPosX).publish_state(atof(value.c_str()));
+                  else if (key == "PosY") id(robotPosY).publish_state(atof(value.c_str()));
+                  else if (key == "HeadingDeg" || key == "Heading") id(robotPosHeading).publish_state(atof(value.c_str()));
+                }
+                continue;
+              }
+              size_t c2 = line.find(',', c1 + 1);
+              if (c2 == std::string::npos) continue;
+
+              float x = atof(line.substr(0, c1).c_str());
+              float y = atof(line.substr(c1 + 1, c2 - c1 - 1).c_str());
+              float heading = atof(line.substr(c2 + 1).c_str());
+
+              id(robotPosX).publish_state(x);
+              id(robotPosY).publish_state(y);
+              id(robotPosHeading).publish_state(heading);
+
+              ESP_LOGI("robotpos", "Position: x=%.1f y=%.1f heading=%.1f", x, y, heading);
+              break; // only need first data line
+            }
+          }
+
+          else if (command.find("ARCHES Board") != std::string::npos) id(uiState).publish_state("Starting...");
 
 
 time:
@@ -602,6 +828,19 @@ text:
         id(nbs_time).set_timezone(x.c_str()); // set timezone for time
         ESP_LOGI("timezone", "Timezone set to: %s", x.c_str()); // log
 
+  # --- No-Go Zones ---
+  - platform: template
+    id: nogo_zones_text
+    name: "No-Go Zones Config"
+    mode: TEXT
+    icon: "mdi:selection-ellipse-remove"
+    set_action:
+      lambda: !lambda |-
+        id(g_nogo_zones) = std::string(x.c_str());
+        id(nogo_zones_text).publish_state(x.c_str());
+        id(nogoZonesData).publish_state(x.c_str());
+        ESP_LOGI("nogo", "Zones updated: %s", x.c_str());
+
 
 sensor:
   # --- GetCharger ---
@@ -684,6 +923,50 @@ sensor:
     id: last_cleaning_duration
     unit_of_measurement: "min"
 
+  # --- LIDAR ---
+  - platform: template
+    name: "LIDAR Scan Quality"
+    id: lidarScanQuality
+    unit_of_measurement: "%"
+    icon: "mdi:radar"
+    entity_category: "diagnostic"
+
+  - platform: template
+    name: "LIDAR Nearest Distance"
+    id: lidarNearestDist
+    unit_of_measurement: "mm"
+    icon: "mdi:ruler"
+    entity_category: "diagnostic"
+
+  - platform: template
+    name: "LIDAR Nearest Angle"
+    id: lidarNearestAngle
+    unit_of_measurement: "°"
+    icon: "mdi:angle-acute"
+    entity_category: "diagnostic"
+
+  # --- Robot Position (from GetRobotPos) ---
+  - platform: template
+    name: "Robot Position X"
+    id: robotPosX
+    unit_of_measurement: "mm"
+    icon: "mdi:axis-x-arrow"
+    entity_category: "diagnostic"
+
+  - platform: template
+    name: "Robot Position Y"
+    id: robotPosY
+    unit_of_measurement: "mm"
+    icon: "mdi:axis-y-arrow"
+    entity_category: "diagnostic"
+
+  - platform: template
+    name: "Robot Heading"
+    id: robotPosHeading
+    unit_of_measurement: "°"
+    icon: "mdi:compass"
+    entity_category: "diagnostic"
+
 
 binary_sensor:
   # --- GetErr ---
@@ -737,6 +1020,18 @@ binary_sensor:
     id: chargerThermistorPresent
     name: "Thermistor Present"
     entity_category: "diagnostic"
+
+  # --- LIDAR ---
+  - platform: template
+    id: lidarScanning
+    name: "LIDAR Scanning"
+    icon: "mdi:radar"
+
+  # --- No-Go Zones ---
+  - platform: template
+    id: zoneViolation
+    name: "Zone Violation"
+    icon: "mdi:alert-octagon"
 
 
 text_sensor:
@@ -846,6 +1141,19 @@ text_sensor:
   - platform: template
     name: "Robot State"
     id: robotState
+
+  # --- LIDAR ---
+  - platform: template
+    name: "LIDAR Scan Data"
+    id: lidarScanData
+    icon: "mdi:radar"
+    entity_category: "diagnostic"
+
+  # --- No-Go Zones ---
+  - platform: template
+    name: "No-Go Zones"
+    id: nogoZonesData
+    icon: "mdi:selection-ellipse-remove"
 
 
 switch:
@@ -1217,11 +1525,33 @@ button:
           id: send_event
           event: "UIMGR_EVENT_SMARTAPP_START_MANUAL_CLEANING"
 
+  # --- LIDAR ---
+  - platform: template
+    name: "LIDAR Scan"
+    id: lidarScanButton
+    icon: mdi:radar
+    on_press:
+      - script.execute: lidar_scan
+
+  - platform: template
+    name: "LIDAR Scan Continuous"
+    id: lidarScanContinuous
+    icon: mdi:radar
+    on_press:
+      - script.execute: lidar_scan_continuous
+
+  - platform: template
+    name: "LIDAR Stop"
+    id: lidarStopButton
+    icon: mdi:stop
+    on_press:
+      - script.execute: lidar_stop
+
   - platform: template
     name: "Update status"
     icon: mdi:refresh
     on_press:
-      - script.execute: get_all_data 
+      - script.execute: get_all_data
     entity_category: "diagnostic"
 
   - platform: template
